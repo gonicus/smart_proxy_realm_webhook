@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 require 'test_helper'
-require 'realm_webhook/provider'
+require 'smart_proxy_realm_webhook'
+require 'smart_proxy_realm_webhook/realm_webhook_provider'
 
 class WebhookTest < Test::Unit::TestCase
   DEFAULT_CONFIG = {
@@ -20,12 +21,12 @@ class WebhookTest < Test::Unit::TestCase
     }
   }
   def test_find
-    provider = Proxy::WebhookRealm::Provider.new(DEFAULT_CONFIG)
+    provider = Proxy::Realm::Webhook::Provider.new(DEFAULT_CONFIG)
     assert_equal provider.find("Host"), {}
   end
 
   def test_construct_request
-    provider = Proxy::WebhookRealm::Provider.new(DEFAULT_CONFIG)
+    provider = Proxy::Realm::Webhook::Provider.new(DEFAULT_CONFIG)
     params = {"a" => "a", "b" => "b"}
     req = provider.construct_request("foo", "bar.host", params)
     assert_equal JSON.parse(req.body), {"operation" => "foo", "hostname" => "bar.host", "params" => params}
@@ -46,7 +47,7 @@ class WebhookTest < Test::Unit::TestCase
         header_name: "X-ACME-SIGNATURE"
       }
     })
-    provider = Proxy::WebhookRealm::Provider.new(config)
+    provider = Proxy::Realm::Webhook::Provider.new(config)
     req = provider.construct_request "bar", "foo.host", params
     assert_equal JSON.parse(req.body), {"operation" => "bar", "hostname" => "foo.host", "params" => params}
     assert_equal req["Content-Type"], "application/vnd.acme.foo+json"
@@ -57,19 +58,19 @@ class WebhookTest < Test::Unit::TestCase
   end
 
   def test_create
-    provider = Proxy::WebhookRealm::Provider.new(DEFAULT_CONFIG)
+    provider = Proxy::Realm::Webhook::Provider.new(DEFAULT_CONFIG)
     provider.expects(:request).with("create", "a_host", {"a" => "a"}).returns("somedata")
     assert_equal "somedata", provider.create("test", 'a_host', {"a" => "a"})
   end
 
   def test_delete
-    provider = Proxy::WebhookRealm::Provider.new(DEFAULT_CONFIG)
+    provider = Proxy::Realm::Webhook::Provider.new(DEFAULT_CONFIG)
     provider.expects(:request).with("delete", "a_host", {}).returns("somedata")
     assert_equal "somedata", provider.delete("test", 'a_host')
   end
 
   def test_configure_webhook
-    provider = Proxy::WebhookRealm::Provider.new(DEFAULT_CONFIG)
+    provider = Proxy::Realm::Webhook::Provider.new(DEFAULT_CONFIG)
     wh = provider.configure_webhook
     assert_equal wh.port, 9999
     assert_equal wh.address, "localhost"
