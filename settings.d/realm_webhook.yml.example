@@ -5,13 +5,13 @@
 :path: /hooks
 
 # Will both default to true
-:use_ssl: false
-:verify_ssl: false
+:use_ssl: true
+:verify_ssl: true
 
 # Additional headers
 :headers:
-  HTTP_X_ACME_SENDER: foreman
-  Content-Type: application/vnd.acme.hostevent+json
+  HTTP_X_FOREMAN_SENDER: foreman
+  Content-Type: application/vnd.foreman.hostevent+json
 
 # If signing is enabled an header within every request
 # will contain a HMAC hashed version of the request body to enable
@@ -23,12 +23,12 @@
   :enabled: true
   :algorithm: sha512
   :secret: secret_shared_with_webhook_server
-  :header_name: HTTP_X_ACME_SIGNATURE
+  :header_name: HTTP_X_FOREMAN_SIGNATURE
 
 # The keys to use in the JSON body for the data are defined here.
 # :operation is either "create" or "delete"
 # :hostname is the name of the host of interest
-# :params will contain a hash of other parameters
+# :params will contain a JSON object with other parameters
 # This example configuration results in something like:
 # {"action":"create","hostname":"host.foo","parameters":{...}}
 :json_keys:
