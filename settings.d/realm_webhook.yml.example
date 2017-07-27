@@ -10,7 +10,7 @@
 
 # Additional headers
 :headers:
-  HTTP_X_FOREMAN_SENDER: foreman
+  HTTP_X_HUB_SENDER: foreman
   Content-Type: application/vnd.foreman.hostevent+json
 
 # If signing is enabled an header within every request
@@ -23,7 +23,7 @@
   :enabled: true
   :algorithm: sha512
   :secret: secret_shared_with_webhook_server
-  :header_name: HTTP_X_FOREMAN_SIGNATURE
+  :header_name: HTTP_X_HUB_SIGNATURE
 
 # The keys to use in the JSON body for the data are defined here.
 # :operation is either "create" or "delete"
